@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaPay - Create Your Digital Wallet Account</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.04) 0%, transparent 60%),
+                radial-gradient(circle at 90% 80%, rgba(2, 132, 199, 0.04) 0%, transparent 60%),
+                #f8fafc;
+            padding: 24px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 440px;
+            padding: 40px;
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .auth-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .auth-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .auth-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .auth-alert {
+            display: none;
+            padding: 12px 16px;
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: var(--radius-md);
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .auth-btn {
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-card">
+        <div class="auth-header">
+            <a href="/" class="auth-logo">
+                <i data-lucide="wallet" style="stroke-width: 2.5px;"></i>
+                NovaPay<span class="logo-dot"></span>
+            </a>
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-subtitle">Get a gift balance of $10,000 for simulator sandbox checks</p>
+        </div>
+
+        <div class="auth-alert" id="auth-alert-box"></div>
+
+        <form id="register-form" onsubmit="handleRegisterSubmit(event)" novalidate>
+            <div class="form-group">
+                <label for="reg-name" class="form-label">Full Name</label>
+                <input type="text" id="reg-name" class="form-control" placeholder="Sarah Jenkins" required>
+                <div class="form-feedback" id="val-name">Full name is required (min 2 characters).</div>
+            </div>
+            <div class="form-group">
+                <label for="reg-email" class="form-label">Email Address</label>
+                <input type="email" id="reg-email" class="form-control" placeholder="sarah@example.com" required>
+                <div class="form-feedback" id="val-email">A valid email address is required.</div>
+            </div>
+            <div class="form-group">
+                <label for="reg-password" class="form-label">Password</label>
+                <input type="password" id="reg-password" class="form-control" placeholder="••••••••" required>
+                <div class="form-feedback" id="val-password">Password must be at least 6 characters.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary auth-btn" id="submit-btn">
+                Register Wallet
+                <i data-lucide="sparkles" size="18"></i>
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Already have a wallet? <a href="login.html">Sign In</a>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+
+        async function handleRegisterSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('reg-name');
+            const email = document.getElementById('reg-email');
+            const password = document.getElementById('reg-password');
+            const alertBox = document.getElementById('auth-alert-box');
+            const submitBtn = document.getElementById('submit-btn');
+
+            // Reset
+            alertBox.style.display = 'none';
+            alertBox.textContent = '';
+            document.querySelectorAll('.form-feedback').forEach(f => f.classList.remove('error'));
+
+            let isValid = true;
+
+            if (name.value.trim().length < 2) {
+                document.getElementById('val-name').classList.add('error');
+                isValid = false;
+            }
+
+            if (!email.value.trim() || !email.value.includes('@')) {
+                document.getElementById('val-email').classList.add('error');
+                isValid = false;
+            }
+
+            if (password.value.length < 6) {
+                document.getElementById('val-password').classList.add('error');
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Connecting Server...';
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name.value.trim(),
+                        email: email.value.trim(),
+                        password: password.value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    submitBtn.innerHTML = 'Wallet Created! Onboarding...';
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 600);
+                } else {
+                    alertBox.textContent = data.error || 'Registration failed.';
+                    alertBox.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Register Wallet <i data-lucide="sparkles" size="18"></i>';
+                    lucide.createIcons();
+                }
+            } catch (err) {
+                alertBox.textContent = 'Server interface is currently offline. Ensure express server runs.';
+                alertBox.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Register Wallet <i data-lucide="sparkles" size="18"></i>';
+                lucide.createIcons();
+            }
+        }
+    </script>
+</body>
+
+</html>

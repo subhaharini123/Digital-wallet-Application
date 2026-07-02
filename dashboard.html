@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaPay - Secure Wallet Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <a href="/" class="logo">
+                    <i data-lucide="wallet" style="stroke-width: 2.5px;"></i>
+                    NovaPay<span class="logo-dot"></span>
+                </a>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="#overview" class="sidebar-item active"><i data-lucide="layout-grid"></i> Overview</a>
+                <a href="#transfers-section" class="sidebar-item"><i data-lucide="arrow-up-right"></i> Send Funds</a>
+                <a href="#bills-section" class="sidebar-item"><i data-lucide="file-text"></i> Invoice Pay</a>
+                <a href="#security-section" class="sidebar-item"><i data-lucide="shield-check"></i> Security
+                    settings</a>
+            </nav>
+            <div class="sidebar-user">
+                <div class="user-avatar" id="sidebar-user-avatar">AM</div>
+                <div class="user-info">
+                    <h4 id="sidebar-user-name">Alex Mercer</h4>
+                    <p id="sidebar-user-email">alex@novapay.co</p>
+                </div>
+            </div>
+            <button class="sidebar-logout" onclick="handleLogout()"><i data-lucide="log-out"></i> Sign Out</button>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Navbar of Dashboard -->
+            <header class="dashboard-header">
+                <div>
+                    <span style="font-size:0.875rem; color:var(--text-muted);">Good day,</span>
+                    <h1 id="user-greeting">Alex Mercer</h1>
+                </div>
+                <div class="header-actions">
+                    <div class="notification-bell">
+                        <i data-lucide="bell"></i>
+                        <span class="bell-dot"></span>
+                    </div>
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background-color:#eff6ff; display:flex; align-items:center; justify-content:center; color:var(--primary); font-weight:700;"
+                        id="user-main-avatar">
+                        AM
+                    </div>
+                </div>
+            </header>
+
+            <!-- Alert Warning Box for Card Freezing -->
+            <div class="frozen-alert-banner" id="frozen-alert-banner">
+                <i data-lucide="alert-triangle"></i>
+                <span><strong>NovaCard Frozen:</strong> Your plastic debit card is currently deactivated. Access the
+                    Security tab below to activate standard authorizations.</span>
+            </div>
+
+            <!-- Main Overview Grid -->
+            <div class="dashboard-grid scroll-anchor" id="overview">
+
+                <!-- Balance Wallet Card -->
+                <div class="card wallet-card-container">
+                    <div class="wallet-card-bg"></div>
+                    <div class="wallet-card-header">
+                        <div>
+                            <p style="color:rgba(255,255,255,0.7); font-size:0.8rem;">TOTAL BALANCE</p>
+                            <h2 id="card-balance-val" class="card-balance">$14,250.80</h2>
+                        </div>
+                        <i data-lucide="wallet" size="24" style="color:white; opacity:0.85;"></i>
+                    </div>
+                    <div class="wallet-card-footer">
+                        <div>
+                            <p style="color:rgba(255,255,255,0.6); font-size:0.75rem;">DEBIT CARD NUMBER</p>
+                            <p id="card-number-lbl"
+                                style="font-family:monospace; color:white; font-size:0.95rem; font-weight:600;">****
+                                **** **** 8824</p>
+                        </div>
+                        <span class="card-type-tag">VISA</span>
+                    </div>
+                </div>
+
+                <!-- SVG Analytics Trend -->
+                <div class="card analytics-card">
+                    <h3 class="card-inner-title">Weekly Net Expenses</h3>
+                    <div class="chart-container">
+                        <svg viewBox="0 0 400 150" class="activity-chart">
+                            <defs>
+                                <linearGradient id="chart-grad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="var(--primary)" stop-opacity="0.25" />
+                                    <stop offset="100%" stop-color="var(--primary)" stop-opacity="0" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M 0 120 Q 80 50 160 90 T 320 20 L 400 60 L 400 150 L 0 150 Z"
+                                fill="url(#chart-grad)"></path>
+                            <path d="M 0 120 Q 80 50 160 90 T 320 20 L 400 60" fill="none" stroke="var(--primary)"
+                                stroke-width="3" stroke-linecap="round"></path>
+                            <!-- Grid Circles -->
+                            <circle cx="80" cy="85" r="4" fill="var(--primary)"></circle>
+                            <circle cx="230" cy="55" r="4" fill="var(--primary)"></circle>
+                            <circle cx="320" cy="20" r="4" fill="var(--primary)"></circle>
+                        </svg>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Quick Portals split layouts -->
+            <div class="portals-split-grid">
+
+                <!-- Send Funds Form (Left column) -->
+                <div class="card scroll-anchor" id="transfers-section">
+                    <h3 class="card-inner-title"><i data-lucide="arrow-up-right"></i> Send Funds Portal</h3>
+                    <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:20px;">Wire instant transfer
+                        values to registered NovaPay user emails or custom accounts.</p>
+
+                    <div class="dashboard-alert" id="transfer-alert-box"
+                        style="display:none; padding:12px; background-color:#ef444415; border:1px solid #ef444430; border-radius:8px; color:#ef4444; font-size:0.8rem; margin-bottom:16px;">
+                    </div>
+                    <div class="dashboard-success-alert" id="transfer-success-box"
+                        style="display:none; padding:12px; background-color:#10b98115; border:1px solid #10b98130; border-radius:8px; color:var(--success); font-size:0.8rem; margin-bottom:16px;">
+                    </div>
+
+                    <form id="dashboard-transfer-form" onsubmit="executeDbTransfer(event)" novalidate>
+                        <div class="form-group">
+                            <label for="transfer-recipient" class="form-label">Recipient Email or Nickname</label>
+                            <input type="text" id="transfer-recipient" class="form-control"
+                                placeholder="michael@novapay.co" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transfer-amount" class="form-label">Transfer Amount ($)</label>
+                            <input type="number" id="transfer-amount" class="form-control" placeholder="250.00"
+                                step="0.01" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">
+                            Verify & Secure Send
+                            <i data-lucide="send" size="18"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Invoices List Card (Right column) -->
+                <div class="card scroll-anchor" id="bills-section">
+                    <h3 class="card-inner-title"><i data-lucide="file-check"></i> Outstanding Utility Bills</h3>
+                    <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:20px;">Process pending payments
+                        directly from your checking account ledger.</p>
+                    <div class="bills-list-container" id="dashboard-bills-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Security Settings Card -->
+            <div class="card scroll-anchor" id="security-section" style="margin-top:24px;">
+                <h3 class="card-inner-title"><i data-lucide="lock"></i> Account Safety & Card Settings</h3>
+                <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:24px;">Manage biometrics
+                    authorizations and credit card active states instantly.</p>
+
+                <div class="security-toggles-grid">
+
+                    <div class="security-toggle-item">
+                        <div class="security-toggle-info">
+                            <h4>FaceID / Fingerprint Lock</h4>
+                            <p>Detections enforce double biometric scans on transactions exceed $500.</p>
+                        </div>
+                        <label class="phone-switch">
+                            <input type="checkbox" id="db-biometrics-toggle"
+                                onchange="toggleSecuritySetting('biometrics', this)">
+                            <span class="phone-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="security-toggle-item">
+                        <div class="security-toggle-info">
+                            <h4>Deactivate & Freeze Visa Card</h4>
+                            <p>Lock ATM withdrawals and online checkouts instantaneously globally.</p>
+                        </div>
+                        <label class="phone-switch">
+                            <input type="checkbox" id="db-freeze-toggle"
+                                onchange="toggleSecuritySetting('freeze', this)">
+                            <span class="phone-slider"></span>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Transaction Logs lists -->
+            <div class="card" style="margin-top:24px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+                    <h3 class="card-inner-title">Account Transaction History</h3>
+                    <div class="history-controls">
+                        <span style="font-size:0.8rem; color:var(--text-muted);">Showing recent operations</span>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>Recipient / Origin</th>
+                                <th>Category</th>
+                                <th>Date Settled</th>
+                                <th>Settlement Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-tx-table-body">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Dashboard Interactivity Script -->
+    <script src="dashboard.js"></script>
+</body>
+
+</html>
